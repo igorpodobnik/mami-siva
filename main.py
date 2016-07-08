@@ -85,6 +85,14 @@ class EmptyHandler(BaseHandler):
     def get(self):
         return self.render_template("empty.html")
 
+class VnosKategorije(BaseHandler):
+    def get(self):
+        return self.render_template("vnoskategorije.html")
+
+class Admin(BaseHandler):
+    def get(self):
+        return self.render_template("admin.html")
+
 class Guestbook(webapp2.RequestHandler):
     def post(self):
         guestbook_name = self.request.get('guestbook_name')
@@ -129,4 +137,6 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/img', Image),
     webapp2.Route('/sign', Guestbook),
     webapp2.Route('/rezultati', Rezultati),
+    webapp2.Route('/vnoskategorije', VnosKategorije),
+    webapp2.Route('/admin', Admin),
 ], debug=True)

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Mami šiva - kontakt{% endblock title %}
+{% block title %}Vnos kategorije{% endblock title %}
 
 {% block containter %}
 
@@ -8,30 +8,24 @@
             <div class="box">
                 <div class="col-lg-12">
                     <hr>
-                    <h2 class="intro-text text-center">Contact
-                        <strong>form</strong>
-                    </h2>
+                    <h2 class="intro-text text-center">Vnos <strong>nove</strong> kategorije</h2>
                     <hr>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat, vitae, distinctio, possimus repudiandae cupiditate ipsum excepturi dicta neque eaque voluptates tempora veniam esse earum sapiente optio deleniti consequuntur eos voluptatem.</p>
+                    <p>Tukaj vnašamo novo kategorijo. Ker imam rad red in poenostavljenje se vsako novo kategorijo vnese preko tega sistema... čeprav bi bilo verjetno lažje na roke narest ;) Posledica tega je da mi za vsako novo kategorijo ni potrebno kode spreminjat! :)</p>
                     <form action="/sign?%s"
                             enctype="multipart/form-data"
                             method="post">
                         <div class="row">
                             <div class="form-group col-lg-4">
-                                <label>Ime</label>
+                                <label>Ime kategorije</label>
                                 <input type="text" class="form-control">
                             </div>
                             <div class="form-group col-lg-4">
-                                <label>Kategorija</label>
-                                <input type="email" class="form-control">
-                            </div>
-                            <div class="form-group col-lg-4">
-                                <label>Izberi slikco</label>
+                                <label>Izberi slikco za kategorijo</label>
                                 <input type="file" class="btn btn-default" name="img"/>
                             </div>
                             <div class="clearfix"></div>
                             <div class="form-group col-lg-12">
-                                <label>Opis</label>
+                                <label>Opis kategorije</label>
                                 <textarea name="content" class="form-control" rows="6"></textarea>
                             </div>
                             <div class="form-group col-lg-12">
