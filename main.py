@@ -38,6 +38,12 @@ class Greeting(ndb.Model):
     avatar = ndb.BlobProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
 
+class Slike(ndb.Model):
+    kategorija = ndb.StringProperty()
+    opis = ndb.TextProperty()
+    slika = ndb.BlobProperty()
+    datum = ndb.DateTimeProperty(auto_now_add=True)
+
 
 
 
@@ -132,7 +138,6 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/about', AboutHandler),
     webapp2.Route('/contact', ContactHandler),
     webapp2.Route('/blog', BlogHandler),
-    webapp2.Route('/empty', EmptyHandler),
     webapp2.Route('/empty', EmptyHandler),
     webapp2.Route('/img', Image),
     webapp2.Route('/sign', Guestbook),
