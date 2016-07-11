@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-
-    <meta charset="utf-8">
+    {% block char %}{% endblock char %}
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -47,22 +47,27 @@
                     <span class="icon-bar"></span>
                 </button>
                 <!-- navbar-brand is hidden on larger screens, but visible when the menu is collapsed -->
-                <a class="navbar-brand" href="index.html">Business Casual</a>
+                <a class="navbar-brand" href="index.html">Mami Šiva</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="/">Home</a>
+                        <a href="/">Začetek</a>
                     </li>
+                    <!--
                     <li>
                         <a href="/about">About</a>
                     </li>
+                     -->
                     <li>
-                        <a href="/blog">Blog</a>
+                        <a href="/blog">Naši izdelki</a>
                     </li>
                     <li>
-                        <a href="/contact">Contact</a>
+                        <a href="/contact">Kontakt</a>
+                    </li>
+                    <li>
+                        <a href="/admin">Administracija</a>
                     </li>
                 </ul>
             </div>
@@ -83,7 +88,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <p>Copyright &copy; Igor 2016</p>
+                    <p>Copyright &copy; Igor P. 2016</p>
                 </div>
             </div>
         </div>
