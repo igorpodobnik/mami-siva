@@ -13,22 +13,22 @@
                     <h2 class="intro-text text-center">Vnos <strong>nove</strong> kategorije</h2>
                     <hr>
                     <p>Tukaj vnašamo novo kategorijo. Ker imam rad red in poenostavljenje se vsako novo kategorijo vnese preko tega sistema... čeprav bi bilo verjetno lažje na roke narest ;) Posledica tega je da mi za vsako novo kategorijo ni potrebno kode spreminjat! :)</p>
-                    <form action="/sign?%s"
+                    <form action="/kreirajkat?%s"
                             enctype="multipart/form-data"
                             method="post">
                         <div class="row">
                             <div class="form-group col-lg-4">
                                 <label>Ime kategorije</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" name="kat_naslov">
                             </div>
                             <div class="form-group col-lg-4">
                                 <label>Izberi slikco za kategorijo</label>
-                                <input type="file" class="btn btn-default" name="img"/>
+                                <input type="file" class="btn btn-default" name="kat_slika"/>
                             </div>
                             <div class="clearfix"></div>
                             <div class="form-group col-lg-12">
                                 <label>Opis kategorije</label>
-                                <textarea name="content" class="form-control" rows="6"></textarea>
+                                <textarea name="kat_opis" class="form-control" rows="6"></textarea>
                             </div>
                             <div class="form-group col-lg-12">
                                 <button type="submit" class="btn btn-default">Shrani</button>

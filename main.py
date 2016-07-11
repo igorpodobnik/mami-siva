@@ -82,6 +82,12 @@ class Greeting(ndb.Model):
     avatar = ndb.BlobProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
 
+class Categorija(ndb.Model):
+    cat_slika = ndb.BlobProperty()
+    cat_naslov = ndb.StringProperty()
+    cat_opis = ndb.TextProperty()
+    cat_aktivni = ndb.BooleanProperty(default=True)
+
 class Slike(ndb.Model):
     kategorija = ndb.StringProperty()
     opis = ndb.TextProperty()
@@ -156,7 +162,7 @@ class Admin(BaseHandler):
 
 class Guestbook(webapp2.RequestHandler):
     def post(self):
-        is_logged_in(params)
+
         guestbook_name = self.request.get('guestbook_name')
         greeting = Greeting(parent=guestbook_key(guestbook_name))
 
@@ -171,6 +177,16 @@ class Guestbook(webapp2.RequestHandler):
         greeting.put()
 
         self.redirect('/rezultati')
+
+class KreirajKategorijo(webapp2.RequestHandler):
+    def post(self):
+        naslov = self.request.get('kat_naslov')
+        kat = Categorija(cat_naslov=naslov)
+        kat.cat_opis = self.request.get('kat_opis')
+        kat.cat_slika = self.request.get('kat_slika')
+        kat.put()
+        self.redirect('/admin')
+
 
 
 class Image(webapp2.RequestHandler):
@@ -198,6 +214,7 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/empty', EmptyHandler),
     webapp2.Route('/img', Image),
     webapp2.Route('/sign', Guestbook),
+    webapp2.Route('/kreirajkat', KreirajKategorijo),
     webapp2.Route('/rezultati', Rezultati),
     webapp2.Route('/vnoskategorije', VnosKategorije),
     webapp2.Route('/admin', Admin),
