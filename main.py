@@ -9,8 +9,52 @@ import urllib
 from google.appengine.api import images
 from google.appengine.api import users
 from google.appengine.ext import ndb
+from google.appengine.api import mail
 template_dir = os.path.join(os.path.dirname(__file__), "templates")
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir), autoescape=False)
+
+
+
+params={}
+
+def is_logged_in(params):
+    p=params
+    user = users.get_current_user()
+    if user:
+        preverialiobstaja()
+        admin=preverialiadmin()
+        logiran = True
+        logout_url = users.create_logout_url('/')
+        paramsif = {"logiran": logiran, "logout_url": logout_url, "user": user, "admin": admin}
+    else:
+        logiran = False
+        login_url = users.create_login_url('/')
+        paramsif = {"logiran": logiran, "login_url": login_url, "user": user}
+    p.update(paramsif)
+    return paramsif
+
+def preverialiobstaja():
+    user = users.get_current_user()
+    emailprejemnika = user.email()
+    user = Uporabniki(user=emailprejemnika)
+    # preverjam ce je user ze v bazi
+    prisoten = Uporabniki.query(Uporabniki.user == emailprejemnika).fetch()
+    if prisoten:
+        print "NOTRI JE ZE!"
+    else:
+        user.put()
+        mail.send_mail("podobnik.igor@gmail.com", "podobnik.igor@gmail.com", "Nov uporabnik", "Novega userja imas in sicer %s" %emailprejemnika)
+
+def preverialiadmin():
+    user = users.get_current_user()
+    emailprejemnika = user.email()
+    admin = Uporabniki.query(ndb.AND(Uporabniki.user == emailprejemnika, Uporabniki.admin == True)).fetch()
+    if admin:
+        return True
+    else:
+        return False
+
+
 
 
 class BaseHandler(webapp2.RequestHandler):
@@ -44,28 +88,36 @@ class Slike(ndb.Model):
     slika = ndb.BlobProperty()
     datum = ndb.DateTimeProperty(auto_now_add=True)
 
-
+class Uporabniki(ndb.Model):
+    user = ndb.StringProperty()
+    approved = ndb.BooleanProperty(default=False)
+    admin = ndb.BooleanProperty(default=False)
 
 
 class MainHandler(BaseHandler):
     def get(self):
-        return self.render_template("index.html")
+        is_logged_in(params)
+        return self.render_template("index.html", params=params)
 
 class AboutHandler(BaseHandler):
     def get(self):
-        return self.render_template("about.html")
+        is_logged_in(params)
+        return self.render_template("about.html", params=params)
 
 class ContactHandler(BaseHandler):
     def get(self):
-        return self.render_template("contact.html")
+        is_logged_in(params)
+        return self.render_template("contact.html", params=params)
 
 class BlogHandler(BaseHandler):
     def get(self):
-        return self.render_template("blog.html")
+        is_logged_in(params)
+        return self.render_template("blog.html", params=params)
 
 
 class Rezultati(BaseHandler):
     def get(self):
+        is_logged_in(params)
         self.response.out.write('<html><body>')
         guestbook_name = self.request.get('guestbook_name')
 
@@ -85,22 +137,26 @@ class Rezultati(BaseHandler):
             self.response.out.write('<blockquote>%s</blockquote></div>' %
                                     cgi.escape(greeting.content))
 
-        return self.render_template("rezultati.html")
+        return self.render_template("rezultati.html", params=params)
 
 class EmptyHandler(BaseHandler):
     def get(self):
-        return self.render_template("empty.html")
+        is_logged_in(params)
+        return self.render_template("empty.html", params=params)
 
 class VnosKategorije(BaseHandler):
     def get(self):
-        return self.render_template("vnoskategorije.html")
+        is_logged_in(params)
+        return self.render_template("vnoskategorije.html", params=params)
 
 class Admin(BaseHandler):
     def get(self):
-        return self.render_template("admin.html")
+        is_logged_in(params)
+        return self.render_template("admin.html", params=params)
 
 class Guestbook(webapp2.RequestHandler):
     def post(self):
+        is_logged_in(params)
         guestbook_name = self.request.get('guestbook_name')
         greeting = Greeting(parent=guestbook_key(guestbook_name))
 
@@ -119,6 +175,7 @@ class Guestbook(webapp2.RequestHandler):
 
 class Image(webapp2.RequestHandler):
     def get(self):
+        is_logged_in(params)
         greeting_key = ndb.Key(urlsafe=self.request.get('img_id'))
         greeting = greeting_key.get()
         if greeting.avatar:
