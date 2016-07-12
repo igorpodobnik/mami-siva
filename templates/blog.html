@@ -15,17 +15,22 @@
                     </h2>
                     <hr>
                 </div>
+
+
+                {% for del in kat %}
+
                 <div class="col-lg-12 text-center">
-                    <img class="img-responsive img-border img-full" src="../assets/img/oblekca.jpg" alt="">
-                    <h2>Naše oblekce
+                    <img class="img-responsive img-border img-full" src="/img2?img_id2={{ del.key.urlsafe() }}" alt="">
+                    <h2>{{ del.cat_naslov }}
                         <br>
-                        <small>October 13, 2013</small>
+                        <small>Made by Maruša</small>
                     </h2>
-                    <p>Lid est laborum dolo rumes fugats untras. Etharums ser quidem rerum facilis dolores nemis omnis fugats vitaes nemo minima rerums unsers sadips amets. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                    <p>{{ del.cat_opis }}</p>
                     <a href="#" class="btn btn-default btn-lg">Read More</a>
                     <hr>
                 </div>
 
+                {% endfor %}
             </div>
         </div>
 

@@ -12,6 +12,8 @@ from google.appengine.ext import ndb
 from google.appengine.api import mail
 template_dir = os.path.join(os.path.dirname(__file__), "templates")
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir), autoescape=False)
+from google.appengine.ext.webapp import blobstore_handlers
+from google.appengine.ext import blobstore
 
 
 
@@ -117,7 +119,11 @@ class ContactHandler(BaseHandler):
 
 class BlogHandler(BaseHandler):
     def get(self):
+
+        vsekategorije = Categorija.query().fetch()
+        params = {"kat" : vsekategorije}
         is_logged_in(params)
+
         return self.render_template("blog.html", params=params)
 
 
@@ -160,50 +166,35 @@ class Admin(BaseHandler):
         is_logged_in(params)
         return self.render_template("admin.html", params=params)
 
-class Guestbook(webapp2.RequestHandler):
-    def post(self):
 
-        guestbook_name = self.request.get('guestbook_name')
-        greeting = Greeting(parent=guestbook_key(guestbook_name))
-
-        if users.get_current_user():
-            greeting.author = users.get_current_user().nickname()
-
-        greeting.content = self.request.get('content')
-
-        avatar = self.request.get('img')
-
-        greeting.avatar = avatar
-        greeting.put()
-
-        self.redirect('/rezultati')
 
 class KreirajKategorijo(webapp2.RequestHandler):
     def post(self):
         naslov = self.request.get('kat_naslov')
-        kat = Categorija(cat_naslov=naslov)
+        kat = Categorija(parent=kat_key(naslov))
         kat.cat_opis = self.request.get('kat_opis')
-        kat.cat_slika = self.request.get('kat_slika')
+        slika = self.request.get('kat_slika')
+        kat.cat_slika = slika
+        kat.cat_naslov = naslov
         kat.put()
-        self.redirect('/admin')
+        self.redirect('/blog')
 
 
 
-class Image(webapp2.RequestHandler):
+def kat_key(naslov=None):
+    return ndb.Key('Naslov', naslov or 'def_naslov')
+
+
+class Image2(webapp2.RequestHandler):
     def get(self):
         is_logged_in(params)
-        greeting_key = ndb.Key(urlsafe=self.request.get('img_id'))
-        greeting = greeting_key.get()
-        if greeting.avatar:
+        categorija_key = ndb.Key(urlsafe=self.request.get('img_id2'))
+        katt = categorija_key.get()
+        if katt.cat_slika:
             self.response.headers['Content-Type'] = 'image/png'
-            self.response.out.write(greeting.avatar)
+            self.response.out.write(katt.cat_slika)
         else:
             self.response.out.write('No image')
-
-
-def guestbook_key(guestbook_name=None):
-    """Constructs a Datastore key for a Guestbook entity with name."""
-    return ndb.Key('Guestbook', guestbook_name or 'default_guestbook')
 
 
 app = webapp2.WSGIApplication([
@@ -212,8 +203,7 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/contact', ContactHandler),
     webapp2.Route('/blog', BlogHandler),
     webapp2.Route('/empty', EmptyHandler),
-    webapp2.Route('/img', Image),
-    webapp2.Route('/sign', Guestbook),
+    webapp2.Route('/img2', Image2),
     webapp2.Route('/kreirajkat', KreirajKategorijo),
     webapp2.Route('/rezultati', Rezultati),
     webapp2.Route('/vnoskategorije', VnosKategorije),
