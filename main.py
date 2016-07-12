@@ -127,30 +127,6 @@ class BlogHandler(BaseHandler):
         return self.render_template("blog.html", params=params)
 
 
-class Rezultati(BaseHandler):
-    def get(self):
-        is_logged_in(params)
-        self.response.out.write('<html><body>')
-        guestbook_name = self.request.get('guestbook_name')
-
-        greetings = Greeting.query(
-            ancestor=guestbook_key(guestbook_name)) \
-            .order(-Greeting.date) \
-            .fetch(10)
-
-        for greeting in greetings:
-            if greeting.author:
-                self.response.out.write(
-                    '<b>%s</b> wrote:' % greeting.author)
-            else:
-                self.response.out.write('An anonymous person wrote:')
-            self.response.out.write('<div><img src="/img?img_id=%s"></img>' %
-                                    greeting.key.urlsafe())
-            self.response.out.write('<blockquote>%s</blockquote></div>' %
-                                    cgi.escape(greeting.content))
-
-        return self.render_template("rezultati.html", params=params)
-
 class EmptyHandler(BaseHandler):
     def get(self):
         is_logged_in(params)
@@ -185,10 +161,10 @@ def kat_key(naslov=None):
     return ndb.Key('Naslov', naslov or 'def_naslov')
 
 
-class Image2(webapp2.RequestHandler):
+class Image(webapp2.RequestHandler):
     def get(self):
         is_logged_in(params)
-        categorija_key = ndb.Key(urlsafe=self.request.get('img_id2'))
+        categorija_key = ndb.Key(urlsafe=self.request.get('img_id'))
         katt = categorija_key.get()
         if katt.cat_slika:
             self.response.headers['Content-Type'] = 'image/png'
@@ -203,9 +179,8 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/contact', ContactHandler),
     webapp2.Route('/blog', BlogHandler),
     webapp2.Route('/empty', EmptyHandler),
-    webapp2.Route('/img2', Image2),
+    webapp2.Route('/img', Image),
     webapp2.Route('/kreirajkat', KreirajKategorijo),
-    webapp2.Route('/rezultati', Rezultati),
     webapp2.Route('/vnoskategorije', VnosKategorije),
     webapp2.Route('/admin', Admin),
 ], debug=True)
